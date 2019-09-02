@@ -53,7 +53,10 @@ bool AnnotItemBase::isIntronic(const AnnotItemBase& other) const {
 /** Used in GTF writer, important to keep correct formatting */
 string AnnotItem::toString(char sep) const {
   stringstream outStream;
-  string bioType = "";
+  string bioType = getBioType();
+
+  //cout << "toString: " << bioType << endl;
+  
   if(getParent()) { bioType = getParent()->getBioType(); }
   string transId  = getParentTransId();
   string geneId   = getParentGeneId();
@@ -279,6 +282,10 @@ void Annotation::readGTF(const string& fileName, const string& specie) {
       else { aux.add(key, value); }
     }
 
+    // MGG: fix a problem with empty biotypes for non-genes!
+    const string& bioType = parser.AsString(1);
+    curr_trans.setBioType(bioType);
+    
     // 1. New Annotation Item
     Coordinate crds = Coordinate(chr, orient, start, stop);
     aItem         = addAnnotItem(AnnotItem(crds, category, transId, geneId, aux));
@@ -294,16 +301,19 @@ void Annotation::readGTF(const string& fileName, const string& specie) {
         curr_gene.addNode(i);
       }
 
-      const string& bioType = parser.AsString(1);
       curr_trans = Transcript(Coordinate(chr, orient, start, stop),
                               bioType, transId);
+
+      //cout << curr_trans.getBioType() << endl;
+      
       curr_trans.addNode(aItem); 
     } else {
       curr_trans.addNode(aItem); 
     }
 
     // 3. New Gene
-    if(curr_gene.getId() != geneId) { 
+    if(curr_gene.getId() != geneId) {
+      //cout << "3" << endl;
       if(curr_gene.getId() != "") { // Don't add if curr_gene has not been set yet
         addGene(curr_gene);
       }
