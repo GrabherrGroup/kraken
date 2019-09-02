@@ -2,7 +2,7 @@ kraken
 ======
 
 - Getting started 
-  - Create a git clone by running git clone https://github.com/nedaz/kraken.git
+  - Create a git clone by running git clone https://github.com/GrabherrGroup/kraken.git
   N.B. Make sure you use git to clone the repository and not use other methods such as svn checkout or download az zip 
 
 - Installation
