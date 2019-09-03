@@ -221,6 +221,10 @@ public:
   virtual const string getId() const      { return transId; }
   virtual AnnotField getType()const       { return TRANS;   } 
 
+  void setBioType(const string & s) {
+    bioType = s;
+  }
+  
   void set(const string& ch, const string& bType, int str, 
 	   int stp, bool  ori, const string& tId) {
     bioType   = bType;
