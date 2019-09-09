@@ -242,7 +242,8 @@ string AIAux::toString() const{
 
 //======================================================
 
-void Annotation::readGTF(const string& fileName, const string& specie) {
+void Annotation::readGTF(const string& fileName, const string& specie,
+			 const set<string>* features) {
 
   speciesId = specie; //Set the specie name/Id
   
@@ -271,6 +272,10 @@ void Annotation::readGTF(const string& fileName, const string& specie) {
     stop      = parser.AsInt(4) - 1;
     chr       = parser.AsString(0);
     category  = parser.AsString(2);
+    if(features != NULL && features->find(category) == features->end())
+      {
+	continue;
+      }
     AIAux aux; // Get all the key value pairs starting from index 9 
     string key, value;
     for (int i=8; i+1 < itemCount; i+=2) {

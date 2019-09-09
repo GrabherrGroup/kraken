@@ -1,4 +1,5 @@
 #include <string>
+#include <set>
 
 #include "ryggrad/src/base/CommandLineParser.h"
 #include "ryggrad/src/base/Logger.h"
@@ -25,6 +26,7 @@ int main(int argc,char** argv)
   commandArg<double> lStringCmmd("-i", "Minimum sequence identity acceptable for a translated region", 0.0);
   commandArg<double> mStringCmmd("-C", "Minimum alignment coverage of mapped region for accepting tanslation ", 0.3);
   commandArg<bool>   outputAllCmmd("-a", "Output GTF input items even if they have not been mapped (0: false, 1: true)", false);
+  commandArg<string> feStringCmmd("-f", "Only include these features in out ut gtf (comma-separated list)","");
   commandLineParser P(argc,argv);
   P.SetDescription("Batch mode GTF transfer/comparison from an source to target genome.");
   P.registerArg(aStringCmmd);
@@ -43,6 +45,7 @@ int main(int argc,char** argv)
   P.registerArg(lStringCmmd);
   P.registerArg(mStringCmmd);
   P.registerArg(outputAllCmmd);
+  P.registerArg(feStringCmmd);
   P.parse();
   string rumConfigFile    = P.GetStringValueFor(aStringCmmd);
   string sourceAnnotFile  = P.GetStringValueFor(bStringCmmd);
@@ -60,7 +63,15 @@ int main(int argc,char** argv)
   double minIdent         = P.GetDoubleValueFor(lStringCmmd);
   double minCover         = P.GetDoubleValueFor(mStringCmmd);
   bool   outputAll        = P.GetBoolValueFor(outputAllCmmd);
- 
+
+  set<string> features;
+  string featurestring  = P.GetStringValueFor(feStringCmmd);
+  StringParser s;
+  s.SetLine(featurestring, ",");
+  for (unsigned i=0; i<s.GetItemCount(); i++) {
+    features.insert(s.AsString(i));
+  }
+  
   FILE* pFile = fopen(applicationFile.c_str(), "w");
   Output2FILE::Stream()     = pFile;
   FILELog::ReportingLevel() = logINFO; 

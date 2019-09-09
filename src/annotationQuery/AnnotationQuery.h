@@ -2,6 +2,7 @@
 #define _ANNOTATION_QUERY_H_
 
 #include <map>
+#include <set>
 #include <string>
 #include <sstream>
 #include "ryggrad/src/base/SVector.h"
@@ -311,8 +312,9 @@ struct CompareGeneTransIdLess {
  */
 class Annotation {
 public:
-  Annotation(const string& fileName, const string& specie) {
-    readGTF(fileName, specie);
+  Annotation(const string& fileName, const string& specie,
+	     const set<string>* features = 0) {
+    readGTF(fileName, specie, features);
   }
 
   /** Note: Copying this object is time consuming - to be used only when absolutely necessary */   
@@ -390,7 +392,8 @@ protected:
   void copy(const Annotation& annot);
 
   /** Read the give GTF file into the rlevant annotation/transcript/gene structures */
-  void readGTF(const string& fileName, const string& specie);
+  void readGTF(const string& fileName, const string& specie,
+	       const set<string>* features = NULL);
 
   /** Sort the vectors and construct nested containment lists - used by the read or update function */
   void sortSetNCLists();

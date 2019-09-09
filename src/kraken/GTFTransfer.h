@@ -2,6 +2,7 @@
 #define _GTF_TRANSFER_H_
 
 #include <map>
+#include <set>
 #include "KrakenMap.h"
 #include "KrakenConfig.h"
 #include "../annotationQuery/AnnotationQuery.h"
@@ -11,7 +12,10 @@ class TransAnnotation: public Annotation
 { 
 public:
   /** Construct by reading from fileName and setting speciesId */
-  TransAnnotation(const string& fileName, const string& specie):Annotation(fileName, specie), translateSpace(specie) {}
+ TransAnnotation(const string& fileName, const string& specie,
+		 const set<string>* features = NULL)
+   :Annotation(fileName, specie, features),
+    translateSpace(specie) {}
 
   /** Construct from an Annotation object */
   TransAnnotation(const Annotation& annot):Annotation(annot) {
