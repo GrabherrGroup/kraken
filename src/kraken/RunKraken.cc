@@ -71,7 +71,7 @@ int main(int argc,char** argv)
   for (unsigned i=0; i<s.GetItemCount(); i++) {
     features.insert(s.AsString(i));
   }
-  
+
   FILE* pFile = fopen(applicationFile.c_str(), "w");
   Output2FILE::Stream()     = pFile;
   FILELog::ReportingLevel() = logINFO; 
@@ -85,7 +85,8 @@ int main(int argc,char** argv)
   transer.setPValThresh(pValThreshold);
   transer.setLocalAlignAdjust(laAdjust);
   transer.setOverflowAdjust(ofAdjust);
-  TransAnnotation sourceAnnot = TransAnnotation(sourceAnnotFile, sourceGenomeId);
+  TransAnnotation sourceAnnot = TransAnnotation(sourceAnnotFile, sourceGenomeId,
+						&features);
   
   // Map Transcripts onto corresponding exons and infer corresponding 
   // transcripts based on number of overlapping exons - nonoverlapping exons
