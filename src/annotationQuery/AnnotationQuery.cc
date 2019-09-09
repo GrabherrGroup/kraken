@@ -276,10 +276,11 @@ void Annotation::readGTF(const string& fileName, const string& specie) {
     for (int i=8; i+1 < itemCount; i+=2) {
       key   = parser.AsString(i);
       value = parser.AsString(i+1);
+      string value_orig = value;
       cleanKeyValue(value); // Remove extra characters
       if(key=="transcript_id") { transId = value; }
       else if(key=="gene_id")  { geneId  = value; }
-      else { aux.add(key, value); }
+      else { aux.add(key, value_orig); }
     }
 
     // MGG: fix a problem with empty biotypes for non-genes!
