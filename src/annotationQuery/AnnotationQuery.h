@@ -345,6 +345,11 @@ public:
     }
   }
 
+  int size()
+  {
+    return genesByCoord.isize();
+  }
+
   /** Only set the loci if needed through calling this function */
   const svec<AnnotItemBase*>& setLoci();
 
@@ -463,7 +468,7 @@ protected:
   }
 
   /** Accessory function used for removing unwanted characters from GTF key-value terms */
-  void cleanKeyValue(string& value);
+  void cleanKeyValue(string& value, bool removeSemicolon=true, bool removeQuotes=true);
 
 
   string speciesId;                    /// The specie to which the annotation belongs 

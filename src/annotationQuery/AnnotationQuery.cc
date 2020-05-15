@@ -235,7 +235,7 @@ string AIAux::toString() const{
   string key, value;
   map<string, string>::const_iterator iter = data.begin();
   for(; iter!=data.end(); iter++) {
-    outStream << iter->first <<  " \"" << iter->second << "\"; "; 
+    outStream << iter->first <<  " \"" << iter->second << "\"; ";
   }
   return outStream.str();
 }
@@ -262,10 +262,10 @@ void Annotation::readGTF(const string& fileName, const string& specie,
   while (parser.ParseLine()) {
     int itemCount = parser.GetItemCount();
     if(itemCount<9 ) { 
-     if(itemCount!=0) {
-       FILE_LOG(logWARNING)<<"GTF file inconsistency: " << parser.Line() ; 
-     }
-     continue;
+      if(itemCount!=0) {
+	FILE_LOG(logWARNING)<<"GTF file inconsistency: " << parser.Line() ; 
+      }
+      continue;
     } 
     orient    = (parser.AsString(6)=="+")?true:false;
     start     = parser.AsInt(3) - 1; //1-based GTF, internal 0-based
@@ -285,7 +285,8 @@ void Annotation::readGTF(const string& fileName, const string& specie,
       cleanKeyValue(value); // Remove extra characters
       if(key=="transcript_id") { transId = value; }
       else if(key=="gene_id")  { geneId  = value; }
-      else { aux.add(key, value_orig); }
+      // else { aux.add(key, value); }
+      else { cleanKeyValue(value_orig, false, true); aux.add(key, value_orig); }
     }
 
     // MGG: fix a problem with empty biotypes for non-genes!
@@ -465,8 +466,10 @@ void Annotation::clear() {
   lociNCList.clear(); 
 }
 
-void Annotation::cleanKeyValue(string& value) {
+void Annotation::cleanKeyValue(string& value, bool removeSemicolon, bool removeQuotes) {
+  if(removeSemicolon)
     value.erase(std::remove(value.begin(), value.end(), ';'), value.end());
+  if(removeQuotes)
     value.erase(std::remove(value.begin(), value.end(), '"'), value.end());
 }
 
